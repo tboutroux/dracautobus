@@ -1,1 +1,100 @@
 @import url(https://fonts.googleapis.com/css?family=Poppins:100,100italic,200,200italic,300,300italic,regular,italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic);
+
+/* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #ffefba, #ffffff);
+    height: 100vh;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    margin: 20px 0;
+    color: #444;
+}
+
+#pokemon-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding: 20px;
+    scroll-behavior: smooth;
+}
+
+#pokemon-container::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for a clean look */
+}
+
+/* Individual Pokemon Card */
+.pokemon-card {
+    flex: 0 0 auto; /* Makes each card take up its width */
+    width: 200px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.pokemon-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.pokemon-card img {
+    width: 80%;
+    height: auto;
+    margin: 10px auto 0;
+    border-radius: 50%;
+    border: 2px solid #f4f4f4;
+    background-color: #f9f9f9;
+}
+
+.pokemon-card h2 {
+    font-size: 1.2em;
+    color: #555;
+    margin: 10px 0;
+}
+
+/* Navigation Buttons */
+.carousel-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 40px;
+}
+
+.carousel-button {
+    background: #ff7f50;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.carousel-button:hover {
+    background: #ff6347;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #pokemon-container {
+        gap: 10px;
+    }
+
+    .pokemon-card {
+        width: 150px;
+    }
+
+    .carousel-button {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+}

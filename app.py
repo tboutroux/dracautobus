@@ -1,4 +1,5 @@
-from routes import app
+from routes import socketio, app
+from flask_socketio import SocketIO
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)

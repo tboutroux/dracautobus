@@ -3,9 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Pokédex</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    
+    <h1>Pokédex</h1>
+
+    <!-- Navigation Buttons -->
+    <div class="carousel-nav">
+        <button class="carousel-button" onclick="scrollCarousel(-1)">⬅️ Previous</button>
+        <button class="carousel-button" onclick="scrollCarousel(1)">Next ➡️</button>
+    </div>
+
+    <!-- Pokemon Container -->
+    <div id="pokemon-container"></div>
+
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+    <script>
+        const socket = io.connect();
+        const container = document.getElementById('pokemon-container');
+
+        // Scroll Function for Carousel Navigation
+        function scrollCarousel(direction) {
+            container.scrollBy({
+                left: direction * 200, // Scrolls by 200px per click
+                behavior: 'smooth',
+            });
+        }
+
+        // Request Pokémon data
+        socket.emit('get_pokemons');
+
+        // Add Pokémon to the container one by one
+        socket.on('pokemon_data', (pokemon) => {
+            const card = document.createElement('div');
+            card.classList.add('pokemon-card');
+            card.id = pokemon.id;
+
+            const nameElement = document.createElement('h2');
+            nameElement.textContent = pokemon.name;
+
+            const imageElement = document.createElement('img');
+            imageElement.src = pokemon.image;
+            imageElement.alt = pokemon.name;
+
+            card.appendChild(imageElement);
+            card.appendChild(nameElement);
+            container.appendChild(card);
+        });
+    </script>
 </body>
 </html>
