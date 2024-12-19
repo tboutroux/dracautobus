@@ -1,56 +1,110 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokédex</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <h1>Pokédex</h1>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pokédex</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+        <h1>Pokédex</h1>
 
-    <!-- Navigation Buttons -->
-    <div class="carousel-nav">
-        <button class="carousel-button" onclick="scrollCarousel(-1)">⬅️ Previous</button>
-        <button class="carousel-button" onclick="scrollCarousel(1)">Next ➡️</button>
-    </div>
+        <!-- Navigation Buttons -->
+        <div class="carousel-nav">
+            <button class="carousel-button" onclick="scrollCarousel(-1)">⬅️ Previous</button>
+            <button class="carousel-button" onclick="scrollCarousel(1)">Next ➡️</button>
+        </div>
 
-    <!-- Pokemon Container -->
-    <div id="pokemon-container"></div>
+        <!-- Pokemon Container -->
+        <div id="pokemon-container"></div>
 
-    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
-    <script>
-        const socket = io.connect();
-        const container = document.getElementById('pokemon-container');
+        <div id="pokemon-info"></div>
 
-        // Scroll Function for Carousel Navigation
-        function scrollCarousel(direction) {
-            container.scrollBy({
-                left: direction * 200, // Scrolls by 200px per click
-                behavior: 'smooth',
+        <script type="module" src="{{ url_for('static', filename='js/script.js') }}"></script>
+        <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+        <script>
+
+            function getPokemonInfo(pokemonId) {
+                let pokemonInfoContainer = document.getElementById('pokemon-info');
+                fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        pokemonInfoContainer.innerHTML = `
+                            <h2 class="pokemon-name">${data.name}</h2>
+                            <div class="pokemon-image-container">
+                                <img class="pokemon-image" src="${data.sprites.front_default}" alt="${data.name}" />
+                            </div>
+                            
+                            <div class="pokemon-details">
+                                <div class="pokemon-detail">
+                                    <strong>Height:</strong> <span>${data.height} decimetres</span>
+                                </div>
+                                <div class="pokemon-detail">
+                                    <strong>Weight:</strong> <span>${data.weight} hectograms</span>
+                                </div>
+                                <div class="pokemon-detail">
+                                    <strong>Base Experience:</strong> <span>${data.base_experience}</span>
+                                </div>
+                            </div>
+
+                            <div class="pokemon-abilities">
+                                <strong>Abilities:</strong>
+                                <span>${data.abilities.map(ability => ability.ability.name).join(', ')}</span>
+                            </div>
+
+                            <div class="pokemon-types">
+                                <strong>Types:</strong>
+                                <span>${data.types.map(type => type.type.name).join(', ')}</span>
+                            </div>
+
+                            <div class="pokemon-stats">
+                                <strong>Stats:</strong>
+                                <ul>
+                                    ${data.stats.map(stat => `<li>${stat.stat.name}: ${stat.base_stat}</li>`).join('')}
+                                </ul>
+                            </div>   `;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+            
+
+            const socket = io.connect();
+            const container = document.getElementById('pokemon-container');
+
+            // Scroll Function for Carousel Navigation
+            function scrollCarousel(direction) {
+                container.scrollBy({
+                    left: direction * 200, // Scrolls by 200px per click
+                    behavior: 'smooth',
+                });
+            }
+
+            // Request Pokémon data
+            socket.emit('get_pokemons');
+
+            // Add Pokémon to the container one by one
+            socket.on('pokemon_data', (pokemon) => {
+                const card = document.createElement('div');
+                card.classList.add('pokemon-card');
+                card.id = pokemon.id;
+                card.onclick = () => {
+                    getPokemonInfo(pokemon.id);
+                };
+
+                const nameElement = document.createElement('h2');
+                nameElement.textContent = pokemon.name;
+
+                const imageElement = document.createElement('img');
+                imageElement.src = pokemon.image;
+                imageElement.alt = pokemon.name;
+
+                card.appendChild(imageElement);
+                card.appendChild(nameElement);
+                container.appendChild(card);
             });
-        }
-
-        // Request Pokémon data
-        socket.emit('get_pokemons');
-
-        // Add Pokémon to the container one by one
-        socket.on('pokemon_data', (pokemon) => {
-            const card = document.createElement('div');
-            card.classList.add('pokemon-card');
-            card.id = pokemon.id;
-
-            const nameElement = document.createElement('h2');
-            nameElement.textContent = pokemon.name;
-
-            const imageElement = document.createElement('img');
-            imageElement.src = pokemon.image;
-            imageElement.alt = pokemon.name;
-
-            card.appendChild(imageElement);
-            card.appendChild(nameElement);
-            container.appendChild(card);
-        });
-    </script>
-</body>
-</html>
+        </script>
+    </body>
+    </html>
