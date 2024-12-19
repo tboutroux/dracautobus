@@ -186,3 +186,39 @@ h1 {
 .pokemon-stats li:last-child {
     margin-bottom: 0;
 }
+
+/* Container for the search bar */
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0; /* Space above and below the search bar */
+}
+
+/* Search bar styling */
+.search-bar {
+    width: 80%; /* Adjust width based on preference */
+    max-width: 500px; /* Max width for larger screens */
+    padding: 10px 15px;
+    border: 2px solid #0075be; /* Blue border resembling the Pokémon theme */
+    border-radius: 25px; /* Rounded corners for a smooth appearance */
+    font-size: 16px; /* Comfortable font size */
+    outline: none; /* Removes default focus outline */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth hover and focus transitions */
+}
+
+/* Hover effect for search bar */
+.search-bar:hover {
+    border-color: #005bb5; /* Slightly darker blue on hover */
+}
+
+/* Focus effect for search bar */
+.search-bar:focus {
+    border-color: #ffcc00; /* Pokémon yellow when focused */
+    box-shadow: 0 0 10px #ffcc00; /* Subtle glow effect */
+}
+
+/* Placeholder text styling */
+.search-bar::placeholder {
+    color: #aaa; /* Lighter gray for placeholder text */
+    font-style: italic; /* Slightly different style for distinction */
+}
