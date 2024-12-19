@@ -222,3 +222,49 @@ h1 {
     color: #aaa; /* Lighter gray for placeholder text */
     font-style: italic; /* Slightly different style for distinction */
 }
+
+/* Navbar container */
+nav {
+    display: flex;
+    justify-content: center; /* Center align the links */
+    align-items: center; /* Vertically center items */
+    background-color: #0075be; /* Pokémon-themed blue */
+    padding: 15px 20px; /* Space around the links */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border-bottom: 3px solid #005bb5; /* Slightly darker bottom border */
+}
+
+/* Links inside the navbar */
+nav a {
+    text-decoration: none; /* Remove underline from links */
+    color: #ffffff; /* White text for contrast */
+    font-size: 18px; /* Comfortable font size */
+    font-weight: bold; /* Emphasize links */
+    margin: 0 15px; /* Space between links */
+    padding: 10px 15px; /* Add some padding for better clickability */
+    border-radius: 5px; /* Slight rounding for hover effect */
+    transition: background-color 0.3s, color 0.3s; /* Smooth hover transition */
+}
+
+/* Hover effect for links */
+nav a:hover {
+    background-color: #ffcc00; /* Pokémon yellow highlight */
+    color: #0075be; /* Complementary blue text */
+}
+
+/* Active link style (optional, for current page indication) */
+nav a.active {
+    background-color: #005bb5; /* Slightly darker blue */
+    color: #ffffff; /* Keep text white */
+    pointer-events: none; /* Disable clicking on the active link */
+}
+
+/* Responsive design (optional) */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column; /* Stack links vertically on smaller screens */
+    }
+    nav a {
+        margin: 10px 0; /* Adjust spacing for vertical alignment */
+    }
+}
