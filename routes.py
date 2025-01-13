@@ -18,6 +18,17 @@ def pokemon(pokemon_id):
 
     return pokemon
 
+@app.route('/add_pokemon_to_team/<int:pokemon_id>/<int:team_id>')
+def add_pokemon_to_team(pokemon_id, team_id):
+    return f'add_pokemon_to_team: {pokemon_id} {team_id}'
+
+@app.route('/play')
+def play():
+    return 'play'
+
+@app.route('/my_team')
+def my_team():
+    return 'my_team'
 
 def fetch_pokemon_data(pokemon_url, results):
     """

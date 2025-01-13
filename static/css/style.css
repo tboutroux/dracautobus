@@ -6,7 +6,7 @@ body {
     margin: 0;
     padding: 0;
     background: linear-gradient(to bottom, #ffefba, #ffffff);
-    height: 100vh;
+    min-height: 100vh;
     color: #333;
 }
 
@@ -185,4 +185,114 @@ h1 {
 
 .pokemon-stats li:last-child {
     margin-bottom: 0;
+}
+
+/* Container for the search bar */
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0; /* Space above and below the search bar */
+}
+
+/* Search bar styling */
+.search-bar {
+    width: 80%; /* Adjust width based on preference */
+    max-width: 500px; /* Max width for larger screens */
+    padding: 10px 15px;
+    border: 2px solid #0075be; /* Blue border resembling the Pokémon theme */
+    border-radius: 25px; /* Rounded corners for a smooth appearance */
+    font-size: 16px; /* Comfortable font size */
+    outline: none; /* Removes default focus outline */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth hover and focus transitions */
+}
+
+/* Hover effect for search bar */
+.search-bar:hover {
+    border-color: #005bb5; /* Slightly darker blue on hover */
+}
+
+/* Focus effect for search bar */
+.search-bar:focus {
+    border-color: #ffcc00; /* Pokémon yellow when focused */
+    box-shadow: 0 0 10px #ffcc00; /* Subtle glow effect */
+}
+
+/* Placeholder text styling */
+.search-bar::placeholder {
+    color: #aaa; /* Lighter gray for placeholder text */
+    font-style: italic; /* Slightly different style for distinction */
+}
+
+/* Navbar container */
+nav {
+    display: flex;
+    justify-content: center; /* Center align the links */
+    align-items: center; /* Vertically center items */
+    background-color: #0075be; /* Pokémon-themed blue */
+    padding: 15px 20px; /* Space around the links */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border-bottom: 3px solid #005bb5; /* Slightly darker bottom border */
+}
+
+/* Links inside the navbar */
+nav a {
+    text-decoration: none; /* Remove underline from links */
+    color: #ffffff; /* White text for contrast */
+    font-size: 18px; /* Comfortable font size */
+    font-weight: bold; /* Emphasize links */
+    margin: 0 15px; /* Space between links */
+    padding: 10px 15px; /* Add some padding for better clickability */
+    border-radius: 5px; /* Slight rounding for hover effect */
+    transition: background-color 0.3s, color 0.3s; /* Smooth hover transition */
+}
+
+/* Hover effect for links */
+nav a:hover {
+    background-color: #ffcc00; /* Pokémon yellow highlight */
+    color: #0075be; /* Complementary blue text */
+}
+
+/* Active link style (optional, for current page indication) */
+nav a.active {
+    background-color: #005bb5; /* Slightly darker blue */
+    color: #ffffff; /* Keep text white */
+    pointer-events: none; /* Disable clicking on the active link */
+}
+
+/* Responsive design (optional) */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column; /* Stack links vertically on smaller screens */
+    }
+    nav a {
+        margin: 10px 0; /* Adjust spacing for vertical alignment */
+    }
+}
+
+/* Loading Indicator */
+#loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 1000;
+}
+
+#loading .spinner {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
