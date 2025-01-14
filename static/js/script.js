@@ -115,7 +115,12 @@ function getPokemonInfo(pokemonId) {
                     <ul>
                         ${data.stats.map(stat => `<li>${stat.stat.name}: ${stat.base_stat}</li>`).join('')}
                     </ul>
-                </div>   `;
+                </div>   
+                
+                <form action="/add_pokemon_to_team/${data.id}" method="POST">
+                    <button type="submit" class="form-button">Ajouter à l'équipe</button>
+                </form>
+                `;
         })
         .catch(error => {
             console.error('Error:', error);
