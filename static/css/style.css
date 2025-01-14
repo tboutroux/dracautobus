@@ -493,3 +493,11 @@ nav a.active {
     background-color: #76c7c0;
     border-radius: 5px;
 }
+
+
+.pokemon-team {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
