@@ -107,13 +107,23 @@ function getPokemonInfo(pokemonId) {
 
                 <div class="pokemon-types">
                     <strong>Types:</strong>
-                    <span>${data.types.map(type => type.type.name).join(', ')}</span>
+                    <span>
+                        ${data.types.map(type => `<span class="pokemon-type ${type.type.name}">${type.type.name}</span>`).join(', ')}
+                    </span>
                 </div>
 
                 <div class="pokemon-stats">
                     <strong>Stats:</strong>
                     <ul>
-                        ${data.stats.map(stat => `<li>${stat.stat.name}: ${stat.base_stat}</li>`).join('')}
+                        ${data.stats.map(stat => `
+                            <li>
+                                ${stat.stat.name}: 
+                                <div class="stat-bar">
+                                    <div class="stat-bar-fill" style="width: ${stat.base_stat}%"></div>
+                                </div>
+                                <span>${stat.base_stat}</span>
+                            </li>
+                        `).join('')}
                     </ul>
                 </div>   
                 
