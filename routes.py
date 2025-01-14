@@ -16,10 +16,6 @@ def index():
 def play():
     return render_template('play.html')
 
-@app.route('/my_team')
-def my_team():
-    return render_template('my_team.html')
-
 @app.route('/add_player', methods=['POST'])
 def add_player():
     player_name = request.form['player_name']
@@ -33,14 +29,50 @@ def remove_player():
 
 @app.route('/pokemon/<int:pokemon_id>')
 def pokemon(pokemon_id):
+    """
+    Récupère les données d'un Pokémon.
+
+    Args:
+        pokemon_id (int): L'identifiant du Pokémon à récupérer.
+    
+    Returns:
+        pokemon (dict): Un dictionnaire contenant les informations sur le Pokémon.
+    """
 
     # Récupère les données du Pokémon
     pokemon = requests.get(f'https://pokeapi.co/api/v2/pokemon/{pokemon_id}').json()
 
     return pokemon
 
+@app.route('/get_pokemon_team', methods=['GET'])
+def get_pokemon_team():
+    """
+    Récupère l'équipe du joueur.
+
+    Returns:
+        team (dict): Un dictionnaire contenant les informations sur l'équipe du joueur.
+    """
+    if 'player_name' in session:
+        print(session['player_name'])
+        return session['player_name']['team']
+    return {}
+
 @app.route('/add_pokemon_to_team/<int:pokemon_id>', methods=['POST'])
 def add_pokemon_to_team(pokemon_id):
+    """
+    Ajoute un Pokémon à l'équipe du joueur.
+
+    Args:
+        pokemon_id (int): L'identifiant du Pokémon à ajouter.
+
+    Returns:
+        response (dict): Un dictionnaire contenant le code de réponse et un message.
+                        - code (int): Le code de statut HTTP (200 pour succès, 400 pour échec).
+                        - message (str): Un message décrivant le résultat de l'opération.
+    """
+
+    response = {'code': 200, 'message': ''}
+
     # Vérifie que le joueur a un nom défini
     if 'player_name' not in session:
         return redirect(url_for('play'))
@@ -48,13 +80,66 @@ def add_pokemon_to_team(pokemon_id):
     # Initialise la structure de données si nécessaire
     if not isinstance(session['player_name'], dict):
         session['player_name'] = {'name': session['player_name'], 'team': []}
+
     elif 'team' not in session['player_name']:
         session['player_name']['team'] = []
 
-    # Ajoute le Pokémon à l'équipe
-    session['player_name']['team'].append(pokemon_id)
+    if len(session['player_name']['team']) < 5:
+        # Ajoute le Pokémon à l'équipe
+        session['player_name']['team'].append(pokemon_id)
+        session.modified = True
 
-    return f"Pokémon {pokemon_id} ajouté à l'équipe de {session['player_name']['name']}."
+    else:
+        response['code'] = 400
+        response['message'] = "L'équipe est déjà pleine."
+        return response
+
+    response['message'] = "Le Pokémon a été ajouté à l'équipe."
+    return response
+
+@app.route('/remove_pokemon_from_team/<int:pokemon_id>', methods=['DELETE'])
+def remove_pokemon_from_team(pokemon_id):
+    """
+    Supprime un Pokémon de l'équipe du joueur.
+
+    Args:
+        pokemon_id (int): L'identifiant du Pokémon à supprimer.
+
+    Returns:
+        response (dict): Un dictionnaire contenant le code de réponse et un message.
+                        - code (int): Le code de statut HTTP (200 pour succès, 400 pour échec).
+                        - message (str): Un message décrivant le résultat de l'opération.
+
+    Redirections:
+        Si le nom du joueur n'est pas défini dans la session, redirige vers la page de jeu.
+    """
+
+    response = {'code': 200, 'message': ''}
+
+    # Vérifie que le joueur a un nom défini
+    if 'player_name' not in session:
+        return redirect(url_for('play'))
+
+    # Initialise la structure de données si nécessaire
+    if not isinstance(session['player_name'], dict):
+        session['player_name'] = {'name': session['player_name'], 'team': []}
+
+    elif 'team' not in session['player_name']:
+        session['player_name']['team'] = []
+
+    # Retire le Pokémon de l'équipe
+    if pokemon_id in session['player_name']['team']:
+        session['player_name']['team'].remove(pokemon_id)
+        session.modified = True
+
+    else:
+        response['code'] = 400
+        response['message'] = "Le Pokémon n'est pas dans l'équipe."
+        return response
+
+    response['message'] = "Le Pokémon a été retiré de l'équipe."
+    return response
+
 
 def fetch_pokemon_data(pokemon_url, results):
     """
