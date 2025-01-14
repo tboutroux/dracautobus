@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, session, request, redirect, url_for
 from flask_socketio import SocketIO, emit
 import requests
 import threading
@@ -6,9 +6,30 @@ import threading
 app = Flask(__name__)
 socketio = SocketIO(app)
 
+app.secret_key = 'mysecretkey'
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/play')
+def play():
+    return render_template('play.html')
+
+@app.route('/my_team')
+def my_team():
+    return render_template('my_team.html')
+
+@app.route('/add_player', methods=['POST'])
+def add_player():
+    player_name = request.form['player_name']
+    session['player_name'] = player_name
+    return redirect(url_for('play'))
+
+@app.route('/remove_player', methods=['POST'])
+def remove_player():
+    session.pop('player_name', None)
+    return redirect(url_for('play'))
 
 @app.route('/pokemon/<int:pokemon_id>')
 def pokemon(pokemon_id):
@@ -18,17 +39,22 @@ def pokemon(pokemon_id):
 
     return pokemon
 
-@app.route('/add_pokemon_to_team/<int:pokemon_id>/<int:team_id>')
-def add_pokemon_to_team(pokemon_id, team_id):
-    return f'add_pokemon_to_team: {pokemon_id} {team_id}'
+@app.route('/add_pokemon_to_team/<int:pokemon_id>', methods=['POST'])
+def add_pokemon_to_team(pokemon_id):
+    # Vérifie que le joueur a un nom défini
+    if 'player_name' not in session:
+        return redirect(url_for('play'))
 
-@app.route('/play')
-def play():
-    return 'play'
+    # Initialise la structure de données si nécessaire
+    if not isinstance(session['player_name'], dict):
+        session['player_name'] = {'name': session['player_name'], 'team': []}
+    elif 'team' not in session['player_name']:
+        session['player_name']['team'] = []
 
-@app.route('/my_team')
-def my_team():
-    return 'my_team'
+    # Ajoute le Pokémon à l'équipe
+    session['player_name']['team'].append(pokemon_id)
+
+    return f"Pokémon {pokemon_id} ajouté à l'équipe de {session['player_name']['name']}."
 
 def fetch_pokemon_data(pokemon_url, results):
     """

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Jouer</title>
+</head>
+<body>
+
+    {% include 'components/navbar.html' %}
+
+    <div class="container">
+
+        <h1>Jouer</h1>
+
+        {% if not session.get('player_name') %}
+
+            <form action="{{ url_for('add_player') }}" method="post" class="player-form">
+                <label for="player_name" class="form-label">Nom du joueur</label>
+                <input 
+                    type="text" 
+                    id="player_name" 
+                    name="player_name" 
+                    class="form-input" 
+                    placeholder="Entrez le nom du joueur" 
+                    required
+                >
+                <button type="submit" class="form-button">Ajouter</button>
+            </form>
+
+        {% else %}
+
+            <form action="{{ url_for('remove_player') }}" method="post" class="player-form">
+                <h2 class="player-name">Bienvenue : {{ session['player_name']['name'] }}</h2>
+                <button type="submit" class="form-button">Supprimer le joueur</button>
+            </form>
+
+            <div class="pokemon-team"></div>
+        
+        {% endif %}
+    </div>
+
+
+    <script type="module" src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/commun.js') }}"></script>
+    <script>
+        changeActiveLink('play');
+    </script>
+    
+</body>
+</html>
