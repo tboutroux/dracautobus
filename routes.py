@@ -84,6 +84,12 @@ def add_pokemon_to_team(pokemon_id):
     elif 'team' not in session['player_name']:
         session['player_name']['team'] = []
 
+    # Vérifie si le Pokémon est déjà dans l'équipe
+    if pokemon_id in session['player_name']['team']:
+        response['code'] = 400
+        response['message'] = "Le Pokémon est déjà dans l'équipe."
+        return response
+
     if len(session['player_name']['team']) < 5:
         # Ajoute le Pokémon à l'équipe
         session['player_name']['team'].append(pokemon_id)

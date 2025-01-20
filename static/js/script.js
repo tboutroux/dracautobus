@@ -86,14 +86,46 @@ if (window.location.pathname === '/') {
                         </ul>
                     </div>   
                     
-                    <form action="/add_pokemon_to_team/${data.id}" method="POST">
-                        <button type="submit" class="form-button">Ajouter à l'équipe</button>
-                    </form>
+                    <button class="form-button" id="add-to-team-button">Ajouter à l'équipe</button>
+                    <div id="confirmation-popup" class="hidden">Le Pokémon a été ajouté à l'équipe !</div>
                     `;
-            })
-            .catch(error => {
-                console.error('Error:', error);
+                document.getElementById('add-to-team-button').addEventListener('click', () => {
+                fetch(`/add_pokemon_to_team/${data.id}`, {
+                    method: 'POST',
+                })
+                .then(response => response.json())
+                .then(result => {
+                    const popup = document.getElementById('confirmation-popup');
+                    if (result.code === 200) {
+                        popup.textContent = "Le Pokémon a été ajouté à l'équipe !";
+                        popup.style.backgroundColor = "#4caf50"; // Vert pour succès
+                    } else if (result.message.includes("déjà dans l'équipe")) {
+                        popup.textContent = "Le Pokémon est déjà dans votre équipe !";
+                        popup.style.backgroundColor = "#f44336"; // Rouge pour doublon
+                    } else if (result.message.includes("pleine")) {
+                        popup.textContent = "L'équipe est déjà pleine. Vous ne pouvez pas ajouter plus de 5 Pokémon.";
+                        popup.style.backgroundColor = "#f44336"; // Rouge pour équipe pleine
+                    } else {
+                        popup.textContent = "Une erreur s'est produite.";
+                        popup.style.backgroundColor = "#f44336";
+                    }
+
+                    popup.classList.remove('hidden');
+                    popup.style.display = 'block';
+
+                    // Masque la popin après 3 secondes
+                    setTimeout(() => {
+                        popup.style.display = 'none';
+                    }, 3000);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
             });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     }
     
     // Show loading element
