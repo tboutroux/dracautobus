@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/battle.css') }}">
+    <title>Combat</title>
+</head>
+<body>
+
+    {% include 'components/navbar.html' %}
+
+    <div class="container-battle">
+        <h1>Combat</h1>
+
+        {% if session.get('battle') %}
+        <div class="battle-info">
+            <!-- Équipe du Joueur -->
+            <div class="player-team">
+                <h2>Équipe du Joueur</h2>
+                <ul>
+                    {% for pokemon in session['battle']['player_team_data'] %}
+                        {% set index = loop.index0 %}
+                        {% if index != session['battle']['active_pokemon']['player'] and session['battle']['player_hp'][index] > 0 %}
+                            <li>
+                                <img src="{{ pokemon['image'] }}" alt="{{ pokemon['name'] }}">
+                                <p>{{ pokemon['name'] }} - HP: {{ session['battle']['player_hp'][index] }} / {{ pokemon['hp'] }}</p>
+                                <!-- <p>Attaque : {{ pokemon['attack'] }}</p> -->
+                                <!-- <p>Défense : {{ pokemon['defense'] }}</p> -->
+                                <p>Type : {{ pokemon['type'] }}</p>
+                                <form action="{{ url_for('choose_pokemon') }}" method="post">
+                                    <input type="hidden" name="pokemon_index" value="{{ loop.index0 }}">
+                                    <button type="submit" class="form-button">Envoyer au combat</button>
+                                </form>                                
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                
+            </div>
+            <div class="active-pokemon">
+                <h2>Pokémon Actif</h2>
+                <div class="player-pokemon">
+                    <p>Joueur :</p>
+                    {% if session['battle']['player_team_data'] and session['battle']['active_pokemon']['player'] is not none %}
+                        <img src="{{ session['battle']['player_team_data'][session['battle']['active_pokemon']['player']]['image'] }}" 
+                            alt="{{ session['battle']['player_team_data'][session['battle']['active_pokemon']['player']]['name'] }}">
+                        <p>{{ session['battle']['player_team_data'][session['battle']['active_pokemon']['player']]['name'] }} - 
+                            HP: {{ session['battle']['player_hp'][session['battle']['active_pokemon']['player']] }}</p>
+                        <p>Attaque : {{ session['battle']['player_team_data'][session['battle']['active_pokemon']['player']]['attack'] }}</p>
+                        <p>Défense : {{ session['battle']['player_team_data'][session['battle']['active_pokemon']['player']]['defense'] }}</p>
+                        <p>Type : {{ session['battle']['player_team_data'][session['battle']['active_pokemon']['player']]['type'] }}</p>
+                        
+                        <h3>Capacités :</h3>
+                        <ul>
+                            {% for move in session['battle']['player_team_data'][session['battle']['active_pokemon']['player']]['moves'] %}
+                                <li class="move-item {{ 'disabled' if session['battle']['turn'] == 'bot' }}" data-move-name="{{ move.name }}">
+                                    {{ move.name }} (Type: {{ move.type }}) - Puissance: {{ move.power or 'Aucune' }} - Effet: {{ move.effect }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Le joueur n'a plus de Pokémon !</p>
+                    {% endif %}
+                </div>
+            
+                <div class="bot-pokemon">
+                    <p>Bot :</p>
+                    {% if session['battle']['bot_team_data'] and session['battle']['active_pokemon']['bot'] is not none %}
+                        <img src="{{ session['battle']['bot_team_data'][session['battle']['active_pokemon']['bot']]['image'] }}" 
+                            alt="{{ session['battle']['bot_team_data'][session['battle']['active_pokemon']['bot']]['name'] }}">
+                        <p>{{ session['battle']['bot_team_data'][session['battle']['active_pokemon']['bot']]['name'] }} - 
+                            HP: {{ session['battle']['bot_hp'][session['battle']['active_pokemon']['bot']] }}</p>
+                        <p>Attaque : {{ session['battle']['bot_team_data'][session['battle']['active_pokemon']['bot']]['attack'] }}</p>
+                        <p>Défense : {{ session['battle']['bot_team_data'][session['battle']['active_pokemon']['bot']]['defense'] }}</p>
+                        <p>Type : {{ session['battle']['bot_team_data'][session['battle']['active_pokemon']['bot']]['type'] }}</p>
+                        
+                    {% else %}
+                        <p>Le bot n'a plus de Pokémon !</p>
+                    {% endif %}
+                </div>
+            
+                {% if session['battle']['turn'] == 'bot' %}
+                    <form id="battle-turn-form" action="{{ url_for('battle_turn') }}" method="post">
+                        <button type="submit" class="form-button" id="battle-form-button">Attaquer</button>
+                    </form>
+                {% endif %}
+            </div>
+            
+
+            <!-- Équipe du Bot -->
+            <div class="bot-team">
+                <h2>Équipe du Bot</h2>
+                <ul>
+                    {% for pokemon in session['battle']['bot_team_data'] %}
+                        {% set index = loop.index0 %}
+                        {% if index != session['battle']['active_pokemon']['bot'] and session['battle']['bot_hp'][index] > 0 %}
+                            <li>
+                                <img src="{{ pokemon['image'] }}" alt="{{ pokemon['name'] }}">
+                                <p>{{ pokemon['name'] }} - HP: {{ session['battle']['bot_hp'][index] }}</p>
+                                <!-- <p>Attaque : {{ pokemon['attack'] }}</p> -->
+                                <!-- <p>Défense : {{ pokemon['defense'] }}</p> -->
+                                <p>Type : {{ pokemon['type'] }}</p>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                
+            </div>
+            {% if session.get('battle') and session['battle'].get('winner') %}
+                <div class="modal" id="winner-modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>Victoire !</h2>
+                        {% if session['battle']['winner'] == 'player' %}
+                            <p>Le joueur a gagné !</p>
+                        {% else %}
+                            <p>Le bot a gagné !</p>
+                        {% endif %}
+                        <button onclick="window.location.href='{{ url_for('play') }}'">Retour à l'accueil</button>
+                    </div>
+                </div>
+
+                <script>
+                    // Afficher la modale
+                    document.getElementById('winner-modal').style.display = 'block';
+
+                    // Fermer la modale lorsque l'on clique sur la croix
+                    document.querySelector('.close').onclick = function() {
+                        document.getElementById('winner-modal').style.display = 'none';
+                    }
+                </script>
+            {% endif %}
+
+        </div>
+        {% else %}
+            <p>Pas de combat en cours.</p>
+        {% endif %}
+    </div>
+
+    <script type="module" src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/commun.js') }}"></script>
+
+    <script>
+        changeActiveLink('battle');
+
+        // Check if it's the bot's turn
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate a click for the bot after 1 second if it's the bot's turn
+            if ("{{ session['battle']['turn'] }}" === "bot") {
+                setTimeout(function() {
+
+                    const playerPokemon = document.querySelector('.active-pokemon .player-pokemon img');
+                    if (playerPokemon) {
+                        playerPokemon.classList.add('attack-animation');
+                    }
+
+                    setTimeout(function() {
+                        document.querySelector('form#battle-turn-form button').click();
+                    }, 800);  // Delay of 1 second
+                    
+
+                });  // Delay of 1 second
+            }
+        });
+
+        document.querySelectorAll('.move-item').forEach(function(moveItem) {
+            moveItem.addEventListener('click', function(event) {
+                // Si c'est le tour du bot, on ne permet pas le clic
+                if (document.querySelector('.move-item').classList.contains('disabled')) {
+                    event.preventDefault();
+                    return;  // Ne rien faire si l'élément est désactivé
+                }
+
+                const botPokemon = document.querySelector('.active-pokemon .bot-pokemon img');
+                if (botPokemon) {
+                    botPokemon.classList.add('attack-animation');
+                }
+
+                const moveName = moveItem.getAttribute('data-move-name');
+                
+                // Créez un formulaire dynamique pour soumettre la capacité
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ url_for("use_move") }}';
+                
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'move_name';
+                input.value = moveName;
+                
+                form.appendChild(input);
+                document.body.appendChild(form);  // Ajoutez le formulaire au body
+
+                // Attendez 1 seconde avant de soumettre le formulaire et de passer au tour du joueur
+                setTimeout(function() {
+                    form.submit();  // Soumettre le formulaire de move
+                }, 1000);  // 1 seconde pour l'animation
+            });
+        });
+
+    </script>
+    
+</body>
+</html>

@@ -30,16 +30,25 @@
             </form>
 
         {% else %}
-
             <form action="{{ url_for('remove_player') }}" method="post" class="player-form">
                 <h2 class="player-name">Bienvenue : {{ session['player_name']['name'] }}</h2>
                 <button type="submit" class="form-button">Supprimer le joueur</button>
             </form>
-
-            <div class="pokemon-team"></div>
-        
+            <div class="pokemon-team">
+                <!-- Affichez l'équipe Pokémon ici -->
+                {% for pokemon in session['pokemon_team'] %}
+                    <div class="pokemon-card">{{ pokemon.name }}</div>
+                {% endfor %}
+            </div>
         {% endif %}
     </div>
+    {% if session['player_name']['team']|length == 5 %}
+        <form action="{{ url_for('start_battle') }}" method="post">
+            <button type="submit" class="form-button">Commencer le combat</button>
+        </form>
+    {% endif %}
+
+    
 
 
     <script type="module" src="{{ url_for('static', filename='js/script.js') }}"></script>
