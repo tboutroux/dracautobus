@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -10,7 +10,9 @@
 
     {% include 'components/navbar.html' %}
 
-    <h1>Pokédex</h1>
+    <div class="title-container">
+        <img src="../static/public/img/Pokedex-14-01-2025.png" alt="Pokédex" class="title-gif" draggable="false">
+    </div>
 
     <!-- Search Bar -->
     <div class="search-container">
@@ -19,8 +21,8 @@
 
     <!-- Navigation Buttons -->
     <div class="carousel-nav">
-        <button class="carousel-button" onclick="scrollCarousel(-1)">⬅️ Previous</button>
-        <button class="carousel-button" onclick="scrollCarousel(1)">Next ➡️</button>
+        <button class="carousel-button" onclick="scrollCarousel(-1)"><img width="16" height="16" src="https://img.icons8.com/skeuomorphism/16/long-arrow-left.png" alt="long-arrow-left"/> Previous</button>
+        <button class="carousel-button" onclick="scrollCarousel(1)">Next <img width="16" height="16" src="https://img.icons8.com/skeuomorphism/16/long-arrow-right.png" alt="long-arrow-left"/></button>
     </div>
 
     <!-- Loading Indicator -->

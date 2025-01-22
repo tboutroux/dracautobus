@@ -1,0 +1,296 @@
+
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #333;
+    background-image: url(https://assets.pokemon.com/static2/_ui/img/chrome/body_bg.png);
+    margin: 0;
+    padding: 0;
+}
+
+.container-battle {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.battle-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.player-team, .bot-team {
+    width: 25%;
+}
+
+.active-pokemon {
+    width: 50%;
+    text-align: center;
+}
+
+h2 {
+    color: #555;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background-color: #e9e9e9;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+li img {
+    max-width: 100px;
+    height: auto;
+}
+
+.form-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+}
+
+#battle-form-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: transparent;
+    color: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+}
+
+.form-button:hover {
+    background-color: #0056b3;
+}
+
+p {
+    text-align: center;
+    color: #777;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Navbar container */
+nav {
+    display: flex;
+    justify-content: center; /* Center align the links */
+    align-items: center; /* Vertically center items */
+    background-color: #005bb5;
+    /* background-image: url(https://assets.pokemon.com/static2/_ui/img/chrome/container_bg.png); Pokémon-themed blue */
+    padding: 15px 20px; /* Space around the links */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border-bottom: 3px solid #005bb5; /* Slightly darker bottom border */
+}
+
+/* Links inside the navbar */
+nav a {
+    text-decoration: none; /* Remove underline from links */
+    color: #ffffff; /* White text for contrast */
+    font-size: 18px; /* Comfortable font size */
+    font-weight: bold; /* Emphasize links */
+    margin: 0 15px; /* Space between links */
+    padding: 10px 15px; /* Add some padding for better clickability */
+    border-radius: 5px; /* Slight rounding for hover effect */
+    transition: background-color 0.3s, color 0.3s; /* Smooth hover transition */
+}
+
+/* Hover effect for links */
+nav a:hover {
+    color: #ee1515; /* Complementary blue text */
+}
+
+/* Active link style (optional, for current page indication) */
+nav a.active {
+    background-color: #005bb5; /* Slightly darker blue */
+    color: #ffffff; /* Keep text white */
+    pointer-events: none; /* Disable clicking on the active link */
+}
+
+/* Responsive design (optional) */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column; /* Stack links vertically on smaller screens */
+    }
+    nav a {
+        margin: 10px 0; /* Adjust spacing for vertical alignment */
+    }
+}
+
+
+
+
+.modal {
+    display: none; /* Cacher par défaut */
+    position: fixed;
+    z-index: 1; /* Reste au-dessus de tout le contenu */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0); /* Ombre noire */
+    background-color: rgba(0,0,0,0.4); /* Ombre transparente */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Largeur de la modale */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+
+
+
+
+/* Conteneur pour les capacités */
+.active-pokemon ul {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 20px; /* Espacement entre les capacités et le reste */
+}
+
+/* Item de la capacité (li) */
+.move-item {
+    background-color: #f8f8f8;  /* Couleur de fond */
+    padding: 10px; /* Espacement interne */
+    margin-bottom: 10px; /* Espacement entre chaque capacité */
+    border-radius: 5px; /* Coins arrondis */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre subtile */
+    cursor: pointer; /* Curseur qui change pour montrer que l'élément est cliquable */
+    transition: background-color 0.3s, transform 0.3s; /* Animation pour hover */
+}
+
+/* Hover effect (quand on survole une capacité) */
+.move-item:hover {
+    background-color: #e0e0e0; /* Couleur de fond au survol */
+    transform: scale(1.05); /* Légère animation d'agrandissement */
+}
+
+/* Focus lorsque l'élément est sélectionné au clavier */
+.move-item:focus {
+    outline: none; /* Enlever le contour par défaut */
+    box-shadow: 0 0 5px #4e9f3d; /* Ombre autour de l'élément pour la mise en surbrillance */
+}
+
+/* Ajouter un peu de marge autour de la liste des capacités pour ne pas qu'elle touche les bords */
+.active-pokemon {
+    margin-bottom: 30px; /* Espacement général en bas */
+    padding: 15px; /* Espacement interne */
+    border-radius: 10px; /* Coins arrondis */
+}
+
+
+.move-item.disabled {
+    color: #888;  /* Gris clair pour indiquer que l'élément est désactivé */
+    pointer-events: none;  /* Désactive l'interaction avec l'élément (pas de clic) */
+    cursor: not-allowed;  /* Change le curseur pour indiquer que c'est désactivé */
+}
+
+
+/* Animation de tremblement */
+@keyframes attackAnimation {
+    0% {
+        transform: translate(0, 0);
+    }
+    10% {
+        transform: translate(-10px, 0);
+    }
+    20% {
+        transform: translate(10px, 0);
+    }
+    30% {
+        transform: translate(-10px, 0);
+    }
+    40% {
+        transform: translate(10px, 0);
+    }
+    50% {
+        transform: translate(-10px, 0);
+    }
+    60% {
+        transform: translate(10px, 0);
+    }
+    70% {
+        transform: translate(-10px, 0);
+    }
+    80% {
+        transform: translate(10px, 0);
+    }
+    90% {
+        transform: translate(-10px, 0);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+/* Appliquez l'animation sur un élément */
+.attack-animation {
+    animation: attackAnimation 0.5s ease;
+}
