@@ -33,6 +33,16 @@ Ce projet est une application web développée avec Flask qui permet aux utilisa
 
 6. **Système de combat** :
    - Permet de simuler un combat entre deux équipes de 5 Pokémon.
+   - la deuxième équipe est celle d'un bot.
+   - Pour jouer, rien de plus simple, voici les méchaniques :
+         - Par défaut le pokémon envoyer ce le premier de votre équipe cependant vous pouvez changer au cours de la partie en appuyant sur "envoyer au combat" sur l'un des pokémon encore en vie.
+         - Pour attaquer, il vous suffit de séléctionner l'une des compétences de votre pokémon.
+         - Prennez en compte que le calcul des dommages est basé sur les règles suivantes :
+                - Les types des pokémons influent sur vos dégats et vos résistances (l'herbe ne résiste pas au feu et le feu à l'eau etc).
+                - La statistique de résistance de votre pokémon entre aussi en compte.
+                - Concernant l'attaque, elle est basée sur votre statistique s'attaque ainsi que la puissance de votre compétence.
+                - Les pokémons ne sont pas affectés par les status (poison, enflammé, sommeil etc)
+   - Une fois les pokémons de l'équipe adverse battues, vous gagnez !
 
 ---
 
