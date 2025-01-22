@@ -16,6 +16,8 @@ def index():
 
 @app.route('/play')
 def play():
+    if 'player_name' not in session: 
+        session['player_name'] = {'name': 'Joueur', 'team': []}
     return render_template('play.html')
 
 @app.route('/add_player', methods=['POST'])
